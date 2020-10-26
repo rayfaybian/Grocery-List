@@ -23,7 +23,8 @@ namespace Grocery_List
         private void btnAdd_Click(object sender, EventArgs e)
         {
             string item = tbProduct.Text;
-            int amount = int.Parse(tbAmount.Text);
+           
+            int.TryParse(tbAmount.Text, out var amount);
 
             if (!string.IsNullOrEmpty(item) && (amount > 0))
             {
@@ -42,17 +43,20 @@ namespace Grocery_List
         private void btnRemove_Click(object sender, EventArgs e)
         {
             string item = tbProduct.Text;
-            int amount = int.Parse(tbAmount.Text);
+            int.TryParse(tbAmount.Text, out var amount);
 
             if (!string.IsNullOrEmpty(item) && (amount > 0))
             {
                 if (shoppingList.ContainsKey(item))
-                {
-                    shoppingList[item] -= amount;
-                }
-                if (amount >= shoppingList[item])
-                {
-                    shoppingList.Remove(item);
+                {                   
+
+                    if (amount >= shoppingList[item])
+                    {
+                        shoppingList.Remove(item);
+                    } else
+                    {
+                        shoppingList[item] -= amount;
+                    }
                 }
             }
             updateShoppinglist();
@@ -68,11 +72,10 @@ namespace Grocery_List
                 string item = entry.Value.ToString() + "x " + entry.Key;
                 list[counter] = item;
                 counter++;
-
             }
-
             lbItems.DataSource = list.ToList();
         }
+
         private Dictionary<string, int> SortDictionary(Dictionary<string, int> dictionary)
         {
             List<string> items = new List<string>(dictionary.Keys);
@@ -85,9 +88,6 @@ namespace Grocery_List
             }
             return orderedDictionary;
         }
-
-    }
-
-    
+    }   
 }
 
